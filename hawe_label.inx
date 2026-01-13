@@ -11,10 +11,13 @@
 
   <param name="radius_in" type="string" gui-text="Corner radius (in) (estimated default)">0.14</param>
 
+  <param name="border_thickness_in" type="string" gui-text="Border thickness (in)">0.03</param>
+  <param name="cut_gap_in" type="string" gui-text="Cut line gap (in)">0.10</param>
   <param name="pad_in" type="string" gui-text="Padding (in)">0.10</param>
   <param name="main_font_in" type="string" gui-text="Main font size (in)">0.22</param>
   <param name="part_font_in" type="string" gui-text="Part number font size (in)">0.12</param>
   <param name="line_spacing" type="string" gui-text="Line spacing factor">1.10</param>
+  <param name="cut_line_width_in" type="string" gui-text="Cut line width (in)">0.01</param>
 
   <effect needs-document="true" needs-live-preview="false">
     <object-type>all</object-type>
