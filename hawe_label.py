@@ -95,8 +95,8 @@ class StickerLabelGenerator(inkex.EffectExtension):
         pars.add_argument("--cut_line_width_in", default="0.01")
 
     def effect(self):
-        label_text = self.options.label_text or ""
-        part_number = self.options.part_number or ""
+        label_text = (self.options.label_text or "").upper()
+        part_number = (self.options.part_number or "").upper()
 
         width_in = parse_float(self.options.width_in, 1.5)
         height_in = parse_float(self.options.height_in, 0.75)
