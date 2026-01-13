@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<inkscape-extension xmlns="http://www.inkscape.org/namespace/inkscape/extension">
+  <name>Basic Border</name>
+  <id>com.spudnik.rounded_border_item_number</id>
+
+  <param name="thickness_in" type="string" gui-text="Border thickness (in)">0.060</param>
+  <param name="radius_in" type="string" gui-text="Outside corner radius (in) (0 = use rect Rx/Ry)">0.000</param>
+
+  <param name="item_text" type="string" gui-text="Item number text">30XXXX</param>
+  <param name="text_height_in" type="string" gui-text="Item text height (in)">0.100</param>
+
+  <param name="keep_master" type="bool" gui-text="Keep original rectangle (lock + label as MASTER)">true</param>
+
+  <effect needs-document="true" needs-live-preview="false">
+    <object-type>shape</object-type>
+    <effects-menu>
+      <submenu name="Stickers"/>
+    </effects-menu>
+  </effect>
+
+  <script>
+    <command reldir="extensions" interpreter="python">border_w_item_num.py</command>
+  </script>
+</inkscape-extension>

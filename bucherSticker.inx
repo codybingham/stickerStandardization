@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<inkscape-extension xmlns="http://www.inkscape.org/namespace/inkscape/extension">
+  <name>Bucher Sticker Generator</name>
+  <id>com.spudnik.bucher_sticker_generator</id>
+
+  <param name="background" type="optiongroup" gui-text="Background">
+    <option value="white">White background</option>
+    <option value="black">Black background</option>
+  </param>
+
+  <param name="num_sections" type="int" gui-text="Number of valve sections">4</param>
+  <param name="section_spacing_in" type="string" gui-text="Section spacing (cell width) (in)">1.25</param>
+  <param name="end_margin_in" type="string" gui-text="End margin (end to first/last cell edge) (in)">0.25</param>
+
+  <param name="section_names" type="string" gui-text="Section names (comma separated)&#10;Example: ELEVATOR LIFT, WHEEL DRIVE, JACK 1, JACK 3"></param>
+
+  <param name="corner_radius_in" type="string" gui-text="Corner radius (in)">0.25</param>
+
+  <param name="border_thickness_in" type="string" gui-text="Border thickness (in)">0.03</param>
+  <param name="cut_gap_in" type="string" gui-text="Cut line gap to border (in)">0.10</param>
+  <param name="cut_line_width_in" type="string" gui-text="Cut line stroke width (in)">0.01</param>
+
+  <param name="label_font_in" type="string" gui-text="Label font size (in)">0.20</param>
+  <param name="part_font_in" type="string" gui-text="Part number font size (in)">0.12</param>
+
+  <param name="part_number" type="string" gui-text="Part number">30XXXX</param>
+  <param name="part_location" type="optiongroup" gui-text="Part number location">
+    <option value="right">Bottom-right</option>
+    <option value="left">Bottom-left</option>
+  </param>
+  <param name="part_offset_in" type="string" gui-text="Part number offset from corner (in)">0.08</param>
+
+  <param name="dot_rows" type="int" gui-text="Jack dot grid rows">2</param>
+  <param name="dot_cols" type="int" gui-text="Jack dot grid columns">4</param>
+  <param name="dot_diam_in" type="string" gui-text="Dot diameter (in)">0.06</param>
+  <param name="dot_pitch_x_in" type="string" gui-text="Dot pitch X (in)">0.15</param>
+  <param name="dot_pitch_y_in" type="string" gui-text="Dot pitch Y (in)">0.15</param>
+  <param name="dot_stroke_in" type="string" gui-text="Dot stroke width (in)">0.012</param>
+
+  <effect needs-document="true" needs-live-preview="false">
+    <object-type>all</object-type>
+    <effects-menu>
+      <submenu name="Stickers"/>
+    </effects-menu>
+  </effect>
+
+  <script>
+    <command reldir="extensions" interpreter="python">bucherSticker.py</command>
+  </script>
+</inkscape-extension>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<inkscape-extension xmlns="http://www.inkscape.org/namespace/inkscape/extension">
+  <name>Hawe Label</name>
+  <id>com.spudnik.sticker_label_generator</id>
+
+  <param name="label_text" type="string" gui-text="Main label text">CURTAIN</param>
+  <param name="part_number" type="string" gui-text="Part number">302136</param>
+
+  <param name="width_in" type="string" gui-text="Label width (in)">1.5</param>
+  <param name="height_in" type="string" gui-text="Label height (in)">0.75</param>
+
+  <param name="radius_in" type="string" gui-text="Corner radius (in) (estimated default)">0.14</param>
+
+  <param name="pad_in" type="string" gui-text="Padding (in)">0.10</param>
+  <param name="main_font_in" type="string" gui-text="Main font size (in)">0.22</param>
+  <param name="part_font_in" type="string" gui-text="Part number font size (in)">0.12</param>
+  <param name="line_spacing" type="string" gui-text="Line spacing factor">1.10</param>
+
+  <effect needs-document="true" needs-live-preview="false">
+    <object-type>all</object-type>
+    <effects-menu>
+      <submenu name="Stickers"/>
+    </effects-menu>
+  </effect>
+
+  <script>
+    <command reldir="extensions" interpreter="python">hawe_label.py</command>
+  </script>
+</inkscape-extension>

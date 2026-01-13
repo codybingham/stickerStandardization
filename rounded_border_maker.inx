@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<inkscape-extension xmlns="http://www.inkscape.org/namespace/inkscape/extension">
+  <name>Rounded Border Maker (in)</name>
+  <id>com.spudnik.rounded_border_maker</id>
+
+  <!-- Use STRING params to preserve precision (thousandths+) -->
+  <param name="thickness_in" type="string" gui-text="Border thickness (in)">0.060</param>
+  <param name="radius_in" type="string" gui-text="Outside corner radius (in) (0 = use rect Rx/Ry)">0.000</param>
+
+  <param name="keep_master" type="bool" gui-text="Keep original rectangle (lock + label as MASTER)">true</param>
+  <param name="remove_rect" type="bool" gui-text="Remove original rectangle (after border created)">false</param>
+
+  <effect>
+    <object-type>shape</object-type>
+    <effects-menu>
+      <submenu name="Stickers"/>
+    </effects-menu>
+  </effect>
+
+  <script>
+    <command reldir="extensions" interpreter="python">rounded_border_maker.py</command>
+  </script>
+</inkscape-extension>

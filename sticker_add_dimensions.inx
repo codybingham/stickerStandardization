@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<inkscape-extension xmlns="http://www.inkscape.org/namespace/inkscape/extension">
+  <name>Add Overall Dimensions (in)</name>
+  <id>com.spudnik.sticker_add_dimensions</id>
+
+  <param name="offset_in" type="string" gui-text="Offset from object (in)">0.100</param>
+  <param name="text_height_in" type="string" gui-text="Text height (in)">0.120</param>
+  <param name="line_width_in" type="string" gui-text="Line width (in)">0.010</param>
+  <param name="arrow_size_in" type="string" gui-text="Arrow size (in)">0.060</param>
+  <param name="decimals" type="string" gui-text="Decimals (e.g. 3)">3</param>
+
+  <effect needs-document="true" needs-live-preview="false">
+    <object-type>all</object-type>
+    <effects-menu>
+      <submenu name="Stickers"/>
+    </effects-menu>
+  </effect>
+
+  <script>
+    <command reldir="extensions" interpreter="python">sticker_add_dimensions.py</command>
+  </script>
+</inkscape-extension>

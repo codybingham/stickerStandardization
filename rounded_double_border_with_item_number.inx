@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<inkscape-extension xmlns="http://www.inkscape.org/namespace/inkscape/extension">
+  <name>Border With Cut Line</name>
+  <id>com.spudnik.rounded_double_border_item</id>
+
+  <param name="thickness_in" type="string" gui-text="Main border thickness (in)">0.060</param>
+  <param name="radius_in" type="string" gui-text="Outside corner radius (in) (0 = use rect Rx/Ry)">0.000</param>
+  <param name="cut_stroke_in" type="string" gui-text="Cut line stroke width (in)">0.005</param>
+
+  <param name="item_text" type="string" gui-text="Item number text">30XXXX</param>
+  <param name="text_height_in" type="string" gui-text="Item text height (in)">0.100</param>
+
+  <effect needs-document="true" needs-live-preview="false">
+    <object-type>shape</object-type>
+    <effects-menu>
+      <submenu name="Stickers"/>
+    </effects-menu>
+  </effect>
+
+  <script>
+    <command reldir="extensions" interpreter="python">rounded_double_border_with_item_number.py</command>
+  </script>
+</inkscape-extension>
