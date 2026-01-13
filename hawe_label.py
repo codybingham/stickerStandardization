@@ -242,8 +242,8 @@ class StickerLabelGenerator(inkex.EffectExtension):
         # Part number (bottom-right)
         part = TextElement()
         part.text = part_number
-        x_part = x + w - pad
-        y_part = y + h - pad * 0.65
+        x_part = x + w - inner_in - pad
+        y_part = y + h - inner_in - pad * 0.65
         part.set("x", str(x_part))
         part.set("y", str(y_part))
         part.style = {
