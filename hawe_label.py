@@ -86,10 +86,13 @@ class StickerLabelGenerator(inkex.EffectExtension):
         pars.add_argument("--height_in", default="0.75")
         pars.add_argument("--radius_in", default="0.14")
 
+        pars.add_argument("--border_thickness_in", default="0.03")
+        pars.add_argument("--cut_gap_in", default="0.10")
         pars.add_argument("--pad_in", default="0.10")
         pars.add_argument("--main_font_in", default="0.22")
         pars.add_argument("--part_font_in", default="0.1")
         pars.add_argument("--line_spacing", default="1.10")
+        pars.add_argument("--cut_line_width_in", default="0.01")
 
     def effect(self):
         label_text = self.options.label_text or ""
@@ -99,19 +102,25 @@ class StickerLabelGenerator(inkex.EffectExtension):
         height_in = parse_float(self.options.height_in, 0.75)
         radius_in = parse_float(self.options.radius_in, 0.14)
 
+        border_thickness_in = parse_float(self.options.border_thickness_in, 0.03)
+        cut_gap_in = parse_float(self.options.cut_gap_in, 0.10)
         pad_in = parse_float(self.options.pad_in, 0.10)
         main_font_in = parse_float(self.options.main_font_in, 0.22)
         part_font_in = parse_float(self.options.part_font_in, 0.12)
         line_spacing = parse_float(self.options.line_spacing, 1.10)
+        cut_line_width_in = parse_float(self.options.cut_line_width_in, 0.01)
 
         for v, name in [
             (width_in, "width"),
             (height_in, "height"),
             (radius_in, "radius"),
+            (border_thickness_in, "border thickness"),
+            (cut_gap_in, "cut line gap"),
             (pad_in, "padding"),
             (main_font_in, "main font size"),
             (part_font_in, "part font size"),
             (line_spacing, "line spacing"),
+            (cut_line_width_in, "cut line width"),
         ]:
             if not isfinite(v) or v <= 0:
                 raise inkex.AbortExtension(f"{name} must be a positive number.")
@@ -120,9 +129,17 @@ class StickerLabelGenerator(inkex.EffectExtension):
         w = self.svg.unittouu(f"{width_in}in")
         h = self.svg.unittouu(f"{height_in}in")
         r = self.svg.unittouu(f"{radius_in}in")
+        border_thickness = self.svg.unittouu(f"{border_thickness_in}in")
+        cut_gap = self.svg.unittouu(f"{cut_gap_in}in")
         pad = self.svg.unittouu(f"{pad_in}in")
         main_fs = self.svg.unittouu(f"{main_font_in}in")
         part_fs = self.svg.unittouu(f"{part_font_in}in")
+        cut_line_width = self.svg.unittouu(f"{cut_line_width_in}in")
+
+        if w <= 2 * (cut_gap + border_thickness) or h <= 2 * (cut_gap + border_thickness):
+            raise inkex.AbortExtension("Label is too small for cut gap + border thickness.")
+        if r < (cut_gap + border_thickness):
+            raise inkex.AbortExtension("Corner radius must be >= (cut gap + border thickness).")
 
         # Place near document origin (you can move after)
         x = 0.0
@@ -133,15 +150,42 @@ class StickerLabelGenerator(inkex.EffectExtension):
         g.set("inkscape:label", "STICKER_LABEL")
         self.svg.get_current_layer().add(g)
 
-        # Background rounded rectangle (as a path)
-        bg = PathElement()
-        bg.path = inkex.Path(rounded_rect_path(x, y, w, h, r))
-        bg.style = {
-            "fill": "#000000",
-            "stroke": "none",
+        outer_bg = PathElement()
+        outer_bg.path = inkex.Path(rounded_rect_path(x, y, w, h, r))
+        outer_bg.style = {"fill": "#FFFFFF", "stroke": "none"}
+        outer_bg.set("inkscape:label", "BACKGROUND_OUTER_FIELD")
+        g.add(outer_bg)
+
+        inner_fill = PathElement()
+        inner_fill.path = inkex.Path(
+            rounded_rect_path(x + cut_gap, y + cut_gap, w - 2 * cut_gap, h - 2 * cut_gap, r - cut_gap)
+        )
+        inner_fill.style = {"fill": "#000000", "stroke": "none"}
+        inner_fill.set("inkscape:label", "BACKGROUND_INTERIOR")
+        g.add(inner_fill)
+
+        cut_line = PathElement()
+        cut_line.path = inkex.Path(rounded_rect_path(x, y, w, h, r))
+        cut_line.style = {
+            "fill": "none",
+            "stroke": "#000000",
+            "stroke-width": str(cut_line_width),
+            "stroke-linejoin": "round",
         }
-        bg.set("inkscape:label", "LABEL_BG")
-        g.add(bg)
+        cut_line.set("inkscape:label", "CUT_LINE")
+        g.add(cut_line)
+
+        outer_in = cut_gap
+        inner_in = cut_gap + border_thickness
+        ring_outer = rounded_rect_path(x + outer_in, y + outer_in, w - 2 * outer_in, h - 2 * outer_in, r - outer_in)
+        ring_inner = rounded_rect_path(x + inner_in, y + inner_in, w - 2 * inner_in, h - 2 * inner_in, r - inner_in)
+
+        ring = PathElement()
+        ring.path = inkex.Path(f"{ring_outer} {ring_inner}")
+        ring.style = {"fill": "#000000", "stroke": "none"}
+        ring.set("fill-rule", "evenodd")
+        ring.set("inkscape:label", "MAIN_BORDER_GEOM")
+        g.add(ring)
 
         # Main text wrapping
         # Approximate max characters per line based on available width and font size.

@@ -98,14 +98,6 @@ class RoundedDoubleBorderItem(inkex.EffectExtension):
             }
             cut_outer.set("inkscape:label", "CUT_LINE")
 
-            # --- Inner cut line ---
-            cut_inner = PathElement()
-            cut_inner.path = inkex.Path(
-                rounded_rect_path(x+t, y+t, w-2*t, h-2*t, r-t)
-            )
-            cut_inner.style = cut_outer.style.copy()
-            cut_inner.set("inkscape:label", "CUT_LINE_INNER")
-
             # --- Main border ring ---
             ring = PathElement()
             ring.path = inkex.Path(
@@ -135,7 +127,6 @@ class RoundedDoubleBorderItem(inkex.EffectExtension):
             text.set("inkscape:label", "ITEM_NUMBER")
 
             parent.add(cut_outer)
-            parent.add(cut_inner)
             parent.add(ring)
             parent.add(text)
 

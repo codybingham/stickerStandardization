@@ -125,24 +125,6 @@ class RoundedDoubleBorderMaker(inkex.EffectExtension):
             cut.style["stroke-linecap"] = "round"
             cut.set("inkscape:label", "CUT_LINE")
 
-            # --- INNER CUT LINE (inset by t) : this rounds the “inner gap” corner you pointed out ---
-            xg = x + t
-            yg = y + t
-            wg = w - 2 * t
-            hg = h - 2 * t
-            rg = r - t
-
-            d_gap = rounded_rect_path(xg, yg, wg, hg, rg)
-            gap_cut = PathElement()
-            gap_cut.path = inkex.Path(d_gap)
-            gap_cut.style = rect.style.copy()
-            gap_cut.style["fill"] = "none"
-            gap_cut.style["stroke"] = stroke_color
-            gap_cut.style["stroke-width"] = str(cut_sw)
-            gap_cut.style["stroke-linejoin"] = "round"
-            gap_cut.style["stroke-linecap"] = "round"
-            gap_cut.set("inkscape:label", "CUT_LINE_INNER")
-
             # --- MAIN BORDER GEOMETRY (ring inset by t from cut line, thickness t) ---
             # Outer loop at inset t
             x1 = x + t
@@ -170,10 +152,9 @@ class RoundedDoubleBorderMaker(inkex.EffectExtension):
             ring.set("fill-rule", "evenodd")
             ring.set("inkscape:label", "MAIN_BORDER_GEOM")
 
-            # Insert next to original (order: cut line, inner cut line, ring)
+            # Insert next to original (order: cut line, ring)
             parent = rect.getparent()
             parent.add(cut)
-            parent.add(gap_cut)
             parent.add(ring)
 
             # Master handling
