@@ -117,7 +117,7 @@ class BucherStickerGenerator(inkex.EffectExtension):
         label_fs_in = parse_float(self.options.label_font_in, 0.20)
         part_fs_in = parse_float(self.options.part_font_in, 0.12)
 
-        part_number = self.options.part_number or "30XXXX"
+        part_number = (self.options.part_number or "30XXXX").upper()
         part_location = (self.options.part_location or "right").lower()
         part_offset_in = parse_float(self.options.part_offset_in, 0.08)
 

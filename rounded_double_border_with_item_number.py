@@ -51,7 +51,7 @@ class RoundedDoubleBorderItem(inkex.EffectExtension):
         r_in = parse_inch(self.options.radius_in)
         cut_sw_in = parse_inch(self.options.cut_stroke_in)
         text_height_in = parse_inch(self.options.text_height_in)
-        item_text = self.options.item_text
+        item_text = (self.options.item_text or "").upper()
 
         if not isfinite(t_in) or t_in <= 0:
             raise inkex.AbortExtension("Thickness must be positive.")

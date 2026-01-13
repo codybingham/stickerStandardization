@@ -49,7 +49,7 @@ class RoundedBorderItemNumber(inkex.EffectExtension):
         t_in = parse_inch(self.options.thickness_in)
         r_in = parse_inch(self.options.radius_in)
         text_height_in = parse_inch(self.options.text_height_in)
-        item_text = self.options.item_text
+        item_text = (self.options.item_text or "").upper()
 
         if not isfinite(t_in) or t_in <= 0:
             raise inkex.AbortExtension("Border thickness must be positive.")
