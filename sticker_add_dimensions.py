@@ -48,6 +48,36 @@ def triangle_path(x, y, dx, dy, size):
     return f"M {tip_x},{tip_y} L {p1x},{p1y} L {p2x},{p2y} Z"
 
 
+def selection_bbox(svg):
+    """
+    Try to get the selection bbox exactly the way Inkscape reports it.
+    Fallback to manual union if the runtime API differs by Inkex version.
+    """
+    sel = svg.selection
+    if hasattr(sel, "bounding_box"):
+        for kwargs in ({"include_stroke": True}, {"stroke": True}, {}):
+            try:
+                bb = sel.bounding_box(**kwargs)
+                if bb is not None:
+                    return bb.left, bb.top, bb.right, bb.bottom
+            except TypeError:
+                continue
+            except Exception:
+                break
+
+    # Fallback: union of element boxes
+    bbs = [el.bounding_box() for el in sel.values()]
+    bbs = [bb for bb in bbs if bb is not None]
+    if not bbs:
+        raise inkex.AbortExtension("Could not compute bounding box for selection.")
+
+    x0 = min(bb.left for bb in bbs)
+    y0 = min(bb.top for bb in bbs)
+    x1 = max(bb.right for bb in bbs)
+    y1 = max(bb.bottom for bb in bbs)
+    return x0, y0, x1, y1
+
+
 class StickerAddDimensions(inkex.EffectExtension):
     def add_arguments(self, pars):
         pars.add_argument("--offset_in", default="0.100")
@@ -81,15 +111,8 @@ class StickerAddDimensions(inkex.EffectExtension):
         line_w = self.svg.unittouu(f"{line_width_in}in")
         arrow_size = self.svg.unittouu(f"{arrow_size_in}in")
 
-        # Bounding box of entire selection (union)
-        bbs = [el.bounding_box() for el in self.svg.selection.values()]
-        if not bbs:
-            raise inkex.AbortExtension("Could not compute bounding box for selection.")
-
-        x0 = min(bb.left for bb in bbs)
-        y0 = min(bb.top for bb in bbs)
-        x1 = max(bb.right for bb in bbs)
-        y1 = max(bb.bottom for bb in bbs)
+        # Selection bbox aligned with Inkscape's displayed W/H where possible.
+        x0, y0, x1, y1 = selection_bbox(self.svg)
 
         width_px = x1 - x0
         height_px = y1 - y0

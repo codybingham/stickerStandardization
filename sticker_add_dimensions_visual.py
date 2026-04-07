@@ -204,6 +204,27 @@ def visual_bbox_union(svg, elements):
     return x0, y0, x1, y1
 
 
+def selection_bbox(svg):
+    """
+    Try to obtain the bbox via the selection API so dimensions track
+    Inkscape's top toolbar W/H values as closely as possible.
+    """
+    sel = svg.selection
+    if hasattr(sel, "bounding_box"):
+        for kwargs in ({"include_stroke": True}, {"stroke": True}, {}):
+            try:
+                bb = sel.bounding_box(**kwargs)
+                if bb is not None:
+                    return bb.left, bb.top, bb.right, bb.bottom
+            except TypeError:
+                continue
+            except Exception:
+                break
+
+    # Fallback to previous stroke-aware estimate.
+    return visual_bbox_union(svg, sel.values())
+
+
 class StickerAddDimensionsVisual(inkex.EffectExtension):
     def add_arguments(self, pars):
         pars.add_argument("--offset_in", default="0.100")
@@ -237,8 +258,8 @@ class StickerAddDimensionsVisual(inkex.EffectExtension):
         line_w = self.svg.unittouu(f"{line_width_in}in")
         arrow_size = self.svg.unittouu(f"{arrow_size_in}in")
 
-        # Stroke-aware bounds (new behavior)
-        x0, y0, x1, y1 = visual_bbox_union(self.svg, self.svg.selection.values())
+        # Prefer Inkscape selection bbox so this matches toolbar W/H.
+        x0, y0, x1, y1 = selection_bbox(self.svg)
 
         width_px = x1 - x0
         height_px = y1 - y0
