@@ -63,10 +63,22 @@ def selection_bbox(svg):
             except TypeError:
                 continue
             except Exception:
-                break
+                continue
 
     # Fallback: union of element boxes
-    bbs = [el.bounding_box() for el in sel.values()]
+    bbs = []
+    for el in sel.values():
+        bb = None
+        for kwargs in ({"include_stroke": True}, {"stroke": True}, {}):
+            try:
+                bb = el.bounding_box(**kwargs)
+                if bb is not None:
+                    break
+            except TypeError:
+                continue
+            except Exception:
+                continue
+        bbs.append(bb)
     bbs = [bb for bb in bbs if bb is not None]
     if not bbs:
         raise inkex.AbortExtension("Could not compute bounding box for selection.")
