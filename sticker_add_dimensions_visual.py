@@ -183,7 +183,16 @@ def visual_bbox_union(svg, elements):
     x0 = y0 = x1 = y1 = None
 
     for el in elements:
-        bb = el.bounding_box()
+        bb = None
+        for kwargs in ({"include_stroke": True}, {"stroke": True}, {}):
+            try:
+                bb = el.bounding_box(**kwargs)
+                if bb is not None:
+                    break
+            except TypeError:
+                continue
+            except Exception:
+                continue
         if bb is None:
             continue
 
@@ -219,7 +228,7 @@ def selection_bbox(svg):
             except TypeError:
                 continue
             except Exception:
-                break
+                continue
 
     # Fallback to previous stroke-aware estimate.
     return visual_bbox_union(svg, sel.values())
